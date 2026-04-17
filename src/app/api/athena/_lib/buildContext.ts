@@ -2,6 +2,7 @@ import { sanitizeForPrompt } from "@/lib/athena/athenaClient";
 import { AthenaEntityContext } from "@/services/athenaService";
 
 const ENTITY_LABELS: Record<AthenaEntityContext["type"], string> = {
+  portal: "Portal RH",
   movimentacao: "Movimentação de benefício",
   beneficiario: "Beneficiário",
   empresa: "Empresa / Subestipulante",
@@ -35,6 +36,7 @@ export function validateEntityContext(
   if (!value || typeof value !== "object") return false;
   const ctx = value as Partial<AthenaEntityContext>;
   const validTypes: AthenaEntityContext["type"][] = [
+    "portal",
     "movimentacao",
     "beneficiario",
     "empresa",

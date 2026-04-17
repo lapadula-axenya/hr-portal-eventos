@@ -110,6 +110,22 @@ function summarizeGeneric(context: AthenaEntityContext): AthenaSummary {
   };
 }
 
+function summarizePortal(): AthenaSummary {
+  return {
+    headline:
+      "Oi! Sou a Athena. Posso te ajudar a navegar pelo portal e entender movimentações, beneficiários, apólices e faturas.",
+    details: [
+      "Estou em modo simulação, então respondo com base em padrões do portal.",
+      "Você também pode clicar em qualquer movimentação para eu explicar aquele registro em detalhe.",
+    ],
+    suggestedQuestions: [
+      "Como faço uma inclusão em lote?",
+      "Onde vejo as faturas do mês?",
+      "O que significa status 'em análise'?",
+    ],
+  };
+}
+
 export async function simulateSummary(
   context: AthenaEntityContext,
 ): Promise<AthenaSummary> {
@@ -117,10 +133,45 @@ export async function simulateSummary(
   if (context.type === "movimentacao") {
     return summarizeMovimentacao(context);
   }
+  if (context.type === "portal") {
+    return summarizePortal();
+  }
   return summarizeGeneric(context);
 }
 
+function pickPortalResponse(question: string): string {
+  const q = question.toLowerCase();
+
+  if (q.includes("inclus") || q.includes("lote") || q.includes("upload")) {
+    return `Para fazer uma inclusão em lote, vá até "Movimentações" no menu lateral e clique em "Enviar planilha". Você pode baixar o template de inclusão, preencher com os beneficiários e subir o arquivo. O sistema mostra linhas com erro antes de confirmar. (resposta simulada)`;
+  }
+  if (q.includes("fatura") || q.includes("boleto") || q.includes("cobra")) {
+    return `As faturas do mês ficam em "Faturas" no menu lateral. Você consegue filtrar por período, baixar o PDF e ver o detalhamento por apólice. Se for KAM, lembre de selecionar a empresa no topo. (resposta simulada)`;
+  }
+  if (q.includes("análise") || q.includes("analise") || q.includes("status")) {
+    return `"Em análise" significa que a operadora recebeu a solicitação e está processando. O SLA típico é de 5 dias úteis. Se passar disso, vale abrir um follow-up. (resposta simulada)`;
+  }
+  if (
+    q.includes("apólice") ||
+    q.includes("apolice") ||
+    q.includes("cobertura")
+  ) {
+    return `Em "Apólices" você vê vigência, subestipulantes e condições de cobertura. Para detalhes de uma apólice específica, clique na linha. (resposta simulada)`;
+  }
+  if (q.includes("dependente") || q.includes("titular")) {
+    return `Dependentes são vinculados ao titular pela relação (cônjuge, filho, etc). Para incluir um dependente, use uma movimentação de inclusão com o tipo "Dependente" e informe a matrícula do titular. (resposta simulada)`;
+  }
+  if (q.includes("dashboard") || q.includes("indicador") || q.includes("kpi")) {
+    return `Em "Analytics" você encontra Saúde Populacional, Saúde Mental, Previsão de Fatura e Auditoria. Cada dashboard tem filtros e drill-down. Clique em um KPI para abrir o detalhamento. (resposta simulada)`;
+  }
+  return `Posso te ajudar com movimentações, beneficiários, apólices, faturas e os dashboards de Analytics. Me dá mais contexto do que você quer fazer e eu te oriento. (resposta simulada)`;
+}
+
 function pickResponse(question: string, context: AthenaEntityContext): string {
+  if (context.type === "portal") {
+    return pickPortalResponse(question);
+  }
+
   const q = question.toLowerCase();
   const label = context.label ?? context.id;
 

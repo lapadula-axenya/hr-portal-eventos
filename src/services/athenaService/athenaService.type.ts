@@ -1,4 +1,5 @@
 export type AthenaEntityType =
+  | "portal"
   | "movimentacao"
   | "beneficiario"
   | "empresa"
