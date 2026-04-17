@@ -1,0 +1,4 @@
+export * from "./__COMPONENT__";
+export * from "./__COMPONENT__.hook";
+export * from "./__COMPONENT__.props";
+export * from "./__COMPONENT__.styles";

@@ -1,0 +1,3 @@
+import { StackProps } from "@mui/material";
+
+export const __STYLE_VAR__: StackProps = {};

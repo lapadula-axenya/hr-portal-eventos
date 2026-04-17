@@ -1,0 +1,40 @@
+name: IaC
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    uses: axenya/actions/.github/workflows/frontend.yml@v2.0.5
+    secrets:
+      google-cloud-service-account: ${{ secrets.IAC_SERVICE_ACCOUNT }}
+      google-cloud-workload-identity-provider: ${{ secrets.IAC_IDENTITY_PROVIDER }}
+    with:
+      docker-registry-url: "southamerica-east1-docker.pkg.dev"
+      environment: "production"
+      google-cloud-artifact-registry-repository: "hr-portal-artifact-registry-repository-production"
+      google-cloud-project-id: "hrp-production"
+      node-version: "20.x"
+      project-image-name: "hr-portal-ui-production"
+      project-image-tag: "latest"
+      terraform-version: "~>1.12"
+      project-build-args: >-
+        --build-arg NEXT_PUBLIC_APP_ENV=production
+        --build-arg NEXT_PUBLIC_BASE_URL=https://portal.axenya.com
+        --build-arg NEXT_PUBLIC_API_BASE_URL=https://hr-portal-api-production-4k7lpbolra-rj.a.run.app
+        --build-arg NEXT_PUBLIC_CLIENT_SECRET=f2b7c92e-2c9f-4e8f-9811-8b5e93d3a4a7
+        --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCibVwtjoF3jWqtCRGq6fSV2ToZAsRAr1k
+        --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=hrp-production.firebaseapp.com
+        --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=hrp-production
+        --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=hrp-production.firebasestorage.app
+        --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=297388383683
+        --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=1:297388383683:web:16f9268e37e45b8ed03176
+        --build-arg NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-TP29C85CW3
+        --build-arg NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdOtO0rAAAAAL9qVCNxz4j_MQ6YjqRo-Ty_AUe7
+        --build-arg NEXT_PUBLIC_AMPLITUDE=33db523cd8f50a4f86deb3da713286f6

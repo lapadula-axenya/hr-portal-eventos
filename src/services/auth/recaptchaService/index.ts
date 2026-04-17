@@ -1,0 +1,1 @@
+export { validateRecaptcha } from "./recaptchaService";

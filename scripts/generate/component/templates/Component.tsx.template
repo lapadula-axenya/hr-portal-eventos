@@ -1,0 +1,10 @@
+import { Stack } from "@mui/material";
+import { __COMPONENT__Props, __STYLE_VAR__ } from "@/components";
+
+export function __COMPONENT__(props: __COMPONENT__Props) {
+  return (
+    <Stack {...__STYLE_VAR__}>
+      {/* content */}
+    </Stack>
+  );
+}

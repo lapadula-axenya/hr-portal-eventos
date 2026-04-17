@@ -1,0 +1,5 @@
+import { Use__COMPONENT__Props } from "@/components";
+
+export function use__COMPONENT__(props: Use__COMPONENT__Props) {
+  // hook logic
+}

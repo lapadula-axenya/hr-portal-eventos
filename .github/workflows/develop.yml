@@ -1,0 +1,40 @@
+name: IaC
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    uses: axenya/actions/.github/workflows/frontend.yml@v2.0.5
+    secrets:
+      google-cloud-service-account: ${{ secrets.IAC_SERVICE_ACCOUNT }}
+      google-cloud-workload-identity-provider: ${{ secrets.IAC_IDENTITY_PROVIDER }}
+    with:
+      docker-registry-url: "southamerica-east1-docker.pkg.dev"
+      environment: "develop"
+      google-cloud-artifact-registry-repository: "hr-portal-artifact-registry-repository-develop"
+      google-cloud-project-id: "hr-portal-464016"
+      node-version: "20.x"
+      project-image-name: "hr-portal-ui-develop"
+      project-image-tag: "latest"
+      terraform-version: "~>1.12"
+      project-build-args: >-
+        --build-arg NEXT_PUBLIC_APP_ENV=development
+        --build-arg NEXT_PUBLIC_BASE_URL=https://dev-portal.axenya.com
+        --build-arg NEXT_PUBLIC_API_BASE_URL=https://hr-portal-api-develop-62aanoqfpq-rj.a.run.app
+        --build-arg NEXT_PUBLIC_CLIENT_SECRET=7aa5b05d-05e8-49bb-ab66-421a0f11e194
+        --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCORkFB9pvnMJfjyuL-jmc48WdOEMfqL8M
+        --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=hr-portal-464016.firebaseapp.com
+        --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=hr-portal-464016
+        --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=hr-portal-464016.firebasestorage.app
+        --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=452657507253
+        --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=1:452657507253:web:470a743e1c5737362cc7fc
+        --build-arg NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-BKC7CSN222
+        --build-arg NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdvgHArAAAAAJOFMwjw9zz-pgPkJu7jpRuAU2zM
+        --build-arg NEXT_PUBLIC_AMPLITUDE=33db523cd8f50a4f86deb3da713286f6
