@@ -347,58 +347,6 @@ export default function PrevisaoFaturaPage() {
             </CardContent>
           </Card>
 
-          {/* Modelos de contrato */}
-          <Stack direction={{ xs: "column", md: "row" }} gap={1.5}>
-            <Card
-              variant="outlined"
-              sx={{
-                flex: 1,
-                borderColor: "primary.main",
-                bgcolor: "rgba(37,233,196,0.04)",
-              }}
-            >
-              <CardContent>
-                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={1}>
-                  <Typography variant="subtitle1" fontWeight={600} color="white">
-                    Pré-pago
-                  </Typography>
-                  <Chip label="Modelo atual" color="primary" size="small" />
-                </Stack>
-                <Typography variant="h5" color="primary.main" fontWeight={600}>
-                  {fmt(487350)}
-                  <Typography component="span" variant="caption" color="grey.100" ml={0.5}>
-                    /mês fixo
-                  </Typography>
-                </Typography>
-                <Typography variant="caption" color="grey.100" display="block" mt={1}>
-                  Previsibilidade total. Custo fixo independente de utilização. Ideal para planejamento orçamentário.
-                </Typography>
-                <Chip label="Volatilidade: baixa" size="small" color="success" sx={{ mt: 1.5 }} />
-              </CardContent>
-            </Card>
-
-            <Card variant="outlined" sx={{ flex: 1 }}>
-              <CardContent>
-                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={1}>
-                  <Typography variant="subtitle1" fontWeight={600} color="white">
-                    Pós-pago
-                  </Typography>
-                  <Chip label="Alternativa" variant="outlined" size="small" />
-                </Stack>
-                <Typography variant="h5" color="white" fontWeight={600}>
-                  ~{fmt(443000)}
-                  <Typography component="span" variant="caption" color="grey.100" ml={0.5}>
-                    /mês médio
-                  </Typography>
-                </Typography>
-                <Typography variant="caption" color="grey.100" display="block" mt={1}>
-                  Paga apenas o uso real. Potencial de economia em períodos de baixa utilização, com risco em picos.
-                </Typography>
-                <Chip label="Volatilidade: média" size="small" color="warning" sx={{ mt: 1.5 }} />
-              </CardContent>
-            </Card>
-          </Stack>
-
           <Divider sx={{ borderColor: "grey.700" }} />
           <Typography variant="caption" color="grey.300" textAlign="center" pb={1}>
             Dados referentes à Acme · Atualizado em 16/04/2026 · Projeções baseadas em tendência histórica
