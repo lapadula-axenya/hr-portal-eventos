@@ -29,6 +29,13 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   reactStrictMode: false,
+  redirects: async () => [
+    {
+      source: "/",
+      destination: "/analytics",
+      permanent: false,
+    },
+  ],
   headers: async () => [
     {
       source: "/(.*)",
