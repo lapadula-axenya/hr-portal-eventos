@@ -1,26 +1,9 @@
 import { NextResponse } from "next/server";
-import {
-  AthenaMessage,
-  callAthena,
-  sanitizeForPrompt,
-} from "@/lib/athena/athenaClient";
+import { simulateChatReply } from "@/lib/athena/athenaSimulator";
 import { consumeRateLimit } from "@/lib/athena/rateLimit";
 import { errorMessages } from "@/messages/errorMessages";
 import { AthenaChatMessage } from "@/services/athenaService";
-import {
-  buildEntitySystemPrompt,
-  validateEntityContext,
-} from "../_lib/buildContext";
-
-const MAX_MESSAGES = 20;
-const MAX_MESSAGE_CHARS = 2000;
-
-function sanitizeMessages(messages: AthenaChatMessage[]): AthenaMessage[] {
-  return messages.slice(-MAX_MESSAGES).map((msg) => ({
-    role: msg.role,
-    content: sanitizeForPrompt(msg.content).slice(0, MAX_MESSAGE_CHARS),
-  }));
-}
+import { validateEntityContext } from "../_lib/buildContext";
 
 function validateMessages(value: unknown): value is AthenaChatMessage[] {
   if (!Array.isArray(value) || value.length === 0) return false;
@@ -68,12 +51,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const systemPrompt = buildEntitySystemPrompt(body.context);
-    const messages = sanitizeMessages(body.messages);
+    const lastUserMessage =
+      [...body.messages].reverse().find((msg) => msg.role === "user")
+        ?.content ?? "";
 
-    const { text } = await callAthena({ systemPrompt, messages });
-
-    return NextResponse.json({ reply: text }, { status: 200 });
+    const reply = await simulateChatReply(body.context, lastUserMessage);
+    return NextResponse.json({ reply }, { status: 200 });
   } catch (error) {
     console.error("Athena chat error:", error);
     return NextResponse.json(
