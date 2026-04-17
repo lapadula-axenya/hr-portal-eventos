@@ -23,4 +23,5 @@ export enum QueryKey {
   ANALYTICS_DASHBOARDS = "analyticsDashboards",
   ANALYTICS_DASHBOARD = "analyticsDashboard",
   ANALYTICS_QUERY_EXECUTION = "analyticsQueryExecution",
+  ATHENA_SUMMARY = "athenaSummary",
 }

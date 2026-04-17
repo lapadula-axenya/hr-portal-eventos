@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Card,
   CardActionArea,
@@ -6,9 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import { ChevronRightIcon } from "lucide-react";
-import { BenefitTypeIcon, StatusDot } from "@/components";
+import { AthenaPanel, BenefitTypeIcon, StatusDot } from "@/components";
 import { benefitMovimentationStatusColor } from "@/constants/benefitMovimentationStatusColor";
 import { useTicketParamsContext } from "@/contexts/TicketParamsContext";
+import { AthenaEntityContext } from "@/services/athenaService";
 import { BeneficiaryTypeTranslate } from "@/services/beneficiaryService";
 import {
   BenefitActionTypeTranslate,
@@ -20,6 +22,41 @@ import { smartNameCase } from "@/utils/smartNameCase";
 
 export function MainMovimentationsModalStepTicket() {
   const { modalTicket, setModalBenefitCardTicket } = useTicketParamsContext();
+
+  const athenaContext = useMemo<AthenaEntityContext | undefined>(() => {
+    if (!modalTicket) return undefined;
+
+    const beneficiaryType = modalTicket.beneficiary?.type
+      ? BeneficiaryTypeTranslate[modalTicket.beneficiary.type]
+      : undefined;
+
+    return {
+      type: "movimentacao",
+      id: modalTicket.id,
+      label: modalTicket.beneficiary?.name,
+      data: {
+        beneficiario: {
+          nome: modalTicket.beneficiary?.name,
+          tipo: beneficiaryType,
+          matricula: modalTicket.beneficiary?.enrollmentNumber,
+        },
+        tickets: modalTicket.tickets.map((ticket) => ({
+          id: ticket.id,
+          beneficio: ticket.benefitType
+            ? BenefitTypeTranslate[ticket.benefitType]
+            : undefined,
+          tipoMovimentacao: ticket.benefitActionType
+            ? BenefitActionTypeTranslate[ticket.benefitActionType]
+            : undefined,
+          status: ticket.status
+            ? BenefitMovimentationStatusTranslate[ticket.status]
+            : undefined,
+          criadoEm: ticket.createdAt,
+          atualizadoEm: ticket.updatedAt,
+        })),
+      },
+    };
+  }, [modalTicket]);
 
   return (
     <Stack spacing="2rem">
@@ -36,6 +73,8 @@ export function MainMovimentationsModalStepTicket() {
           )
         </Typography>
       </Stack>
+
+      <AthenaPanel context={athenaContext} />
 
       <Stack spacing="20px">
         <Typography variant="subtitle1" fontWeight={700}>
