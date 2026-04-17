@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import {
+  Box,
   Card,
   CardContent,
-  Chip,
   Divider,
   FormControl,
   InputLabel,
@@ -21,6 +21,15 @@ import {
   Typography,
 } from "@mui/material";
 import ReactECharts from "echarts-for-react";
+import {
+  Coins,
+  FileWarning,
+  FlaskConical,
+  Receipt,
+  ShieldAlert,
+  Tag,
+  type LucideIcon,
+} from "lucide-react";
 import { OverflowBox, PageContainer } from "@/components";
 import { AnalyticsKpiCard } from "../_components/AnalyticsKpiCard";
 
@@ -109,11 +118,35 @@ const AUDITORIAS_RECENTES = [
   },
 ];
 
-const statusConfig: Record<string, { label: string; color: "success" | "warning" | "error" }> = {
-  recuperado: { label: "Recuperado", color: "success" },
-  em_negociacao: { label: "Em negociação", color: "warning" },
-  perdido: { label: "Perdido", color: "error" },
+const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
+  recuperado: { label: "Recuperado", color: "#25E9C4", bg: "rgba(37,233,196,0.10)" },
+  em_negociacao: { label: "Em negociação", color: "#FFB420", bg: "rgba(255,180,32,0.10)" },
+  perdido: { label: "Perdido", color: "#F6685E", bg: "rgba(246,104,94,0.10)" },
 };
+
+const categoryConfig: Record<string, { icon: LucideIcon; tint: string }> = {
+  "Cobrança duplicada": { icon: Receipt, tint: "#5EAEFF" },
+  "Reembolso fora de diretriz": { icon: FileWarning, tint: "#FFB420" },
+  "Med. sem autorização": { icon: ShieldAlert, tint: "#F6685E" },
+  "Exame repetido": { icon: FlaskConical, tint: "#C084FC" },
+  "Coparticipação indevida": { icon: Coins, tint: "#25E9C4" },
+};
+
+const partnerPalette = ["#5EAEFF", "#25E9C4", "#FFB420", "#C084FC", "#F6685E", "#50EDCF", "#7E7E7E", "#5EAEFF"];
+
+function partnerAccent(name: string) {
+  const hash = [...name].reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  return partnerPalette[hash % partnerPalette.length];
+}
+
+function partnerInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
 
 const fmt = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
@@ -485,59 +518,231 @@ export default function AuditoriaPage() {
                 </Typography>
               ) : (
                 <TableContainer>
-                  <Table size="small">
+                  <Table
+                    size="small"
+                    sx={{
+                      "& td, & th": {
+                        padding: "14px 16px",
+                        borderBottom: "1px solid",
+                        borderColor: "grey.700",
+                        background: "transparent",
+                      },
+                      "& th": {
+                        background: "transparent",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.6px",
+                        fontSize: 10,
+                        fontWeight: 600,
+                        color: "grey.300",
+                        padding: "10px 16px",
+                      },
+                    }}
+                  >
                     <TableHead>
                       <TableRow>
-                        {["ID", "Data", "Categoria", "Parceiro", "Valor orig.", "Pós-auditoria", "Economia", "Status"].map(
-                          (col) => (
-                            <TableCell
-                              key={col}
-                              sx={{ color: "grey.100", borderColor: "grey.700", whiteSpace: "nowrap" }}
-                            >
-                              {col}
-                            </TableCell>
-                          )
-                        )}
+                        <TableCell sx={{ width: 96 }}>ID</TableCell>
+                        <TableCell sx={{ width: 110 }}>Data</TableCell>
+                        <TableCell>Categoria</TableCell>
+                        <TableCell>Parceiro</TableCell>
+                        <TableCell align="right" sx={{ width: 110 }}>Valor orig.</TableCell>
+                        <TableCell align="right" sx={{ width: 120 }}>Pós-auditoria</TableCell>
+                        <TableCell align="right" sx={{ width: 180 }}>Economia</TableCell>
+                        <TableCell align="right" sx={{ width: 140 }}>Status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {filteredAuditorias.map((aud) => {
                         const s = statusConfig[aud.status];
+                        const cat = categoryConfig[aud.categoria] ?? { icon: Tag, tint: "#7E7E7E" };
+                        const CatIcon = cat.icon;
+                        const accent = partnerAccent(aud.parceiro);
                         return (
                           <TableRow
                             key={aud.id}
                             sx={{
+                              transition: "background-color 120ms ease",
                               "&:last-child td": { border: 0 },
-                              "& td": { borderColor: "grey.700" },
-                              "&:hover": { bgcolor: "rgba(255,255,255,0.03)" },
-                              cursor: "default",
+                              "&:hover": { bgcolor: "rgba(37,233,196,0.04)" },
+                              "&:hover td:first-of-type": {
+                                boxShadow: "inset 2px 0 0 0 #25E9C4",
+                              },
                             }}
                           >
-                            <TableCell sx={{ color: "white", fontFamily: "monospace", fontSize: 11 }}>
-                              {aud.id}
+                            <TableCell>
+                              <Box
+                                component="span"
+                                sx={{
+                                  display: "inline-block",
+                                  px: 0.85,
+                                  py: 0.2,
+                                  borderRadius: 0.75,
+                                  bgcolor: "grey.900",
+                                  border: "1px solid",
+                                  borderColor: "grey.700",
+                                  color: "white",
+                                  fontFamily: "monospace",
+                                  fontSize: 10.5,
+                                  letterSpacing: "0.3px",
+                                }}
+                              >
+                                {aud.id}
+                              </Box>
                             </TableCell>
-                            <TableCell sx={{ color: "grey.100", whiteSpace: "nowrap" }}>{aud.data}</TableCell>
-                            <TableCell sx={{ color: "grey.100", fontSize: 11 }}>{aud.categoria}</TableCell>
-                            <TableCell sx={{ color: "grey.100", fontSize: 11 }}>{aud.parceiro}</TableCell>
-                            <TableCell sx={{ color: "grey.100", textAlign: "right" }}>
-                              {fmt(aud.valorOriginal)}
-                            </TableCell>
-                            <TableCell sx={{ color: "grey.100", textAlign: "right" }}>
-                              {fmt(aud.valorApos)}
-                            </TableCell>
-                            <TableCell sx={{ textAlign: "right" }}>
-                              {aud.economia > 0 ? (
-                                <Typography variant="caption" color="success.main" fontWeight={600}>
-                                  {fmt(aud.economia)} ({aud.pct}%)
-                                </Typography>
-                              ) : (
-                                <Typography variant="caption" color="grey.300">
-                                  —
-                                </Typography>
-                              )}
+                            <TableCell sx={{ color: "grey.100", fontSize: 12, whiteSpace: "nowrap" }}>
+                              {aud.data}
                             </TableCell>
                             <TableCell>
-                              <Chip label={s.label} color={s.color} size="small" />
+                              <Stack direction="row" gap={1.1} alignItems="center">
+                                <Box
+                                  sx={{
+                                    width: 26,
+                                    height: 26,
+                                    borderRadius: 1,
+                                    bgcolor: `${cat.tint}1F`,
+                                    color: cat.tint,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  <CatIcon size={14} strokeWidth={2} />
+                                </Box>
+                                <Typography sx={{ color: "grey.100", fontSize: 12 }}>
+                                  {aud.categoria}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
+                            <TableCell>
+                              <Stack direction="row" gap={1} alignItems="center">
+                                <Box
+                                  sx={{
+                                    width: 26,
+                                    height: 26,
+                                    borderRadius: "50%",
+                                    bgcolor: `${accent}1F`,
+                                    color: accent,
+                                    border: `1px solid ${accent}33`,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    letterSpacing: "0.3px",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {partnerInitials(aud.parceiro)}
+                                </Box>
+                                <Typography sx={{ color: "grey.100", fontSize: 12 }}>
+                                  {aud.parceiro}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                color: "grey.100",
+                                fontSize: 12,
+                                fontVariantNumeric: "tabular-nums",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {fmt(aud.valorOriginal)}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                color: aud.valorApos === 0 ? "grey.300" : "white",
+                                fontSize: 12,
+                                fontWeight: aud.valorApos === 0 ? 400 : 600,
+                                fontVariantNumeric: "tabular-nums",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {fmt(aud.valorApos)}
+                            </TableCell>
+                            <TableCell align="right">
+                              {aud.economia > 0 ? (
+                                <Stack gap={0.5} alignItems="flex-end">
+                                  <Stack direction="row" gap={0.75} alignItems="baseline">
+                                    <Typography
+                                      sx={{
+                                        color: "#25E9C4",
+                                        fontSize: 12,
+                                        fontWeight: 700,
+                                        fontVariantNumeric: "tabular-nums",
+                                      }}
+                                    >
+                                      {fmt(aud.economia)}
+                                    </Typography>
+                                    <Typography
+                                      sx={{
+                                        color: "grey.300",
+                                        fontSize: 10,
+                                        fontWeight: 500,
+                                      }}
+                                    >
+                                      {aud.pct}%
+                                    </Typography>
+                                  </Stack>
+                                  <Box
+                                    sx={{
+                                      width: 88,
+                                      height: 3,
+                                      bgcolor: "grey.700",
+                                      borderRadius: 2,
+                                      overflow: "hidden",
+                                    }}
+                                  >
+                                    <Box
+                                      sx={{
+                                        width: `${aud.pct}%`,
+                                        height: "100%",
+                                        background:
+                                          "linear-gradient(90deg, #25E9C4 0%, #50EDCF 100%)",
+                                        transition: "width 400ms ease",
+                                      }}
+                                    />
+                                  </Box>
+                                </Stack>
+                              ) : (
+                                <Typography sx={{ color: "grey.300", fontSize: 12 }}>—</Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="right">
+                              <Box
+                                sx={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 0.75,
+                                  px: 1,
+                                  py: 0.4,
+                                  borderRadius: 999,
+                                  bgcolor: s.bg,
+                                  border: `1px solid ${s.color}33`,
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    width: 6,
+                                    height: 6,
+                                    borderRadius: "50%",
+                                    bgcolor: s.color,
+                                    boxShadow: `0 0 0 2px ${s.color}22`,
+                                  }}
+                                />
+                                <Typography
+                                  sx={{
+                                    color: s.color,
+                                    fontSize: 10.5,
+                                    fontWeight: 600,
+                                    letterSpacing: "0.3px",
+                                  }}
+                                >
+                                  {s.label}
+                                </Typography>
+                              </Box>
                             </TableCell>
                           </TableRow>
                         );
