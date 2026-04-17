@@ -8,7 +8,7 @@ import React, {
   PropsWithChildren,
   useState,
 } from "react";
-import { User } from "firebase/auth";
+import type { User } from "firebase/auth";
 import { AuthRole } from "@/enums/AuthRole";
 
 type AuthContextType = {
