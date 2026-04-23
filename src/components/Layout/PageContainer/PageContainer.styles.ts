@@ -14,6 +14,7 @@ export const pageContainerHeaderStyles: StackProps = {
   direction: "row",
   justifyContent: "space-between",
   alignItems: "center",
+  gap: 1.5,
   width: "100%",
   height: pageContainerHeaderHeight,
   borderBottom: "1px solid",
@@ -24,6 +25,12 @@ export const pageContainerTitleStyles: TypographyProps = {
   variant: "h5",
   color: "grey.100",
   fontWeight: 700,
+  noWrap: true,
+  sx: {
+    flex: 1,
+    minWidth: 0,
+    fontSize: { xs: "1.125rem", md: "1.5rem" },
+  },
 };
 
 export const pageContainerHeaderSlotStyles: StackProps = {
@@ -86,9 +93,10 @@ export const pageContainerMainStyles = (
     component: "main",
     paddingBottom: { xs: 1, md: 1.5 },
     paddingInline: { xs: 1.5, md: 2.5 },
-    overflow: "auto",
     height,
     sx: {
+      overflowX: "hidden",
+      overflowY: "auto",
       transition: "0.3s all",
     },
     ...(paddingTop && { paddingTop }),
