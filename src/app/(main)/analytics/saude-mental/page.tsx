@@ -578,29 +578,28 @@ export default function SaudeMentalPage() {
                 </Stack>
               ) : (
                 <TableContainer sx={{ overflowX: "auto" }}>
-                  <Table size="small" sx={{ minWidth: 480 }}>
+                  <Table
+                    size="small"
+                    sx={{
+                      minWidth: 480,
+                      "& td, & th": {
+                        padding: "12px 16px",
+                        borderBottom: "1px solid",
+                        borderColor: "grey.700",
+                      },
+                      "& th": {
+                        background: "transparent",
+                        color: "grey.100",
+                        fontWeight: 600,
+                      },
+                    }}
+                  >
                     <TableHead>
                       <TableRow>
-                        <TableCell
-                          sx={{ color: "grey.100", borderColor: "grey.700" }}
-                        >
-                          Código
-                        </TableCell>
-                        <TableCell
-                          sx={{ color: "grey.100", borderColor: "grey.700" }}
-                        >
-                          Entrada
-                        </TableCell>
-                        <TableCell
-                          sx={{ color: "grey.100", borderColor: "grey.700" }}
-                        >
-                          Status
-                        </TableCell>
-                        <TableCell
-                          sx={{ color: "grey.100", borderColor: "grey.700" }}
-                        >
-                          Próxima ação
-                        </TableCell>
+                        <TableCell>Código</TableCell>
+                        <TableCell>Entrada</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell align="right">Próxima ação</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -609,10 +608,7 @@ export default function SaudeMentalPage() {
                         return (
                           <TableRow
                             key={caso.codigo}
-                            sx={{
-                              "&:last-child td": { border: 0 },
-                              "& td": { borderColor: "grey.700" },
-                            }}
+                            sx={{ "&:last-child td": { border: 0 } }}
                           >
                             <TableCell
                               sx={{
@@ -633,7 +629,14 @@ export default function SaudeMentalPage() {
                                 size="small"
                               />
                             </TableCell>
-                            <TableCell sx={{ color: "grey.100" }}>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                color: "grey.100",
+                                fontVariantNumeric: "tabular-nums",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
                               {caso.proxima ?? "—"}
                             </TableCell>
                           </TableRow>
