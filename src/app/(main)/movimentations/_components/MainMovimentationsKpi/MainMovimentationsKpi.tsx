@@ -69,8 +69,8 @@ export function MainMovimentationsKpi({
 
     return (
       <>
-        <Icon size={20} strokeWidth={1} />
-        <EllipsisText variant="caption">
+        <Icon size={14} strokeWidth={1.5} />
+        <EllipsisText variant="caption" fontSize="0.7rem">
           {!!delta && Math.abs(delta)} {text}
         </EllipsisText>
       </>
@@ -78,27 +78,33 @@ export function MainMovimentationsKpi({
   };
 
   return (
-    <Card sx={{ width: "100%", position: "relative" }}>
+    <Card sx={{ width: "100%", height: "100%" }}>
       <Stack
         height="100%"
         color="grey.100"
         justifyContent="center"
+        spacing={0.5}
         component={CardContent}
+        sx={{
+          padding: { xs: "10px 12px", md: "12px 16px" },
+          "&:last-child": { paddingBottom: { xs: "10px", md: "12px" } },
+        }}
       >
-        <Stack
-          direction="row"
-          alignItems="end"
-          spacing="16px"
-          position="absolute"
-          top="19%"
-        >
-          <Stack bgcolor={alpha(color, 0.1)} padding="10px" borderRadius="50%">
-            <Icon size={26} color={color} />
+        <Stack direction="row" alignItems="center" spacing="10px">
+          <Stack
+            bgcolor={alpha(color, 0.1)}
+            padding="6px"
+            borderRadius="50%"
+            flexShrink={0}
+          >
+            <Icon size={18} color={color} />
           </Stack>
 
-          <Stack flexGrow={1}>
-            <EllipsisText lineHeight={1.15}>{titles[kpiStatus]}</EllipsisText>
-            <EllipsisText variant="h3" fontWeight={700} color="white">
+          <Stack flexGrow={1} minWidth={0}>
+            <EllipsisText variant="caption" lineHeight={1.15}>
+              {titles[kpiStatus]}
+            </EllipsisText>
+            <EllipsisText variant="h5" fontWeight={700} color="white">
               {kpiValues.today}
             </EllipsisText>
           </Stack>
@@ -108,10 +114,7 @@ export function MainMovimentationsKpi({
           direction="row"
           alignItems="center"
           justifyContent="end"
-          spacing="8px"
-          position="absolute"
-          bottom="10px"
-          right="14px"
+          spacing="4px"
         >
           {renderYesterdayDelta(kpiValues)}
         </Stack>

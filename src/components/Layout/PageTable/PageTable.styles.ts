@@ -8,11 +8,14 @@ import {
 export const pageTableStyles: StackProps = {
   spacing: "1rem",
   height: "100%",
+  minWidth: 0,
 };
 
 export const pageTableContainerStyles: TableContainerProps = {
   sx: {
     flexGrow: 1,
+    minWidth: 0,
+    maxWidth: "100%",
   },
 };
 

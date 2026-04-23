@@ -68,7 +68,7 @@ export default function MainMovimentationsPage() {
   return (
     <PageContainer
       title="Movimentações"
-      appendSlotHeight={{ xs: "150px", md: "164px" }}
+      appendSlotHeight={{ xs: "100px", md: "110px" }}
       appendSlot={<MainMovimentationsAppendSlot />}
       headerSlot={<MainMovimentationsHeaderSlot />}
     >

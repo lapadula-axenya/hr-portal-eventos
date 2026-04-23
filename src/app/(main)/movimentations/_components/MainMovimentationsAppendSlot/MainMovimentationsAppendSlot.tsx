@@ -19,7 +19,7 @@ export function MainMovimentationsAppendSlot() {
   const { isKpisLoading, kpi } = useKpisQuery();
 
   return (
-    <Stack direction="row" spacing="24px" height="100%">
+    <Stack direction="row" spacing={{ xs: "8px", md: "24px" }} height="100%">
       {isKpisLoading &&
         Object.values(KpiStatus).map((_, index) => (
           <CardSkeleton key={index} />
